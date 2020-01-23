@@ -1,5 +1,7 @@
 package com.mingben.betplatform.dto.request;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,6 +48,7 @@ public class BetRequestProjects {
             code = "1&2&3&4&5&6&7||||";
         }
 
+
         double total = 0;
         List<Double> defaultPrize = null;
         int mode = 0;
@@ -67,6 +70,9 @@ public class BetRequestProjects {
             mode = 8;
         }
 
+        DecimalFormat format = new DecimalFormat("0.0000");
+        String totalStr = format.format(total *  7);
+
 
 
 
@@ -76,10 +82,10 @@ public class BetRequestProjects {
                 .code(code)
                 .show_code("1234567,,,,")
                 .num_count(7)
-                .mode(5)
+                .mode(mode)
                 .multiple(betMultiple)
                 .rebate(0)
-                .total(String.valueOf(7 * total))
+                .total(totalStr)
                 .position(null)
                 .prize(defaultPrize)
                 .build();
