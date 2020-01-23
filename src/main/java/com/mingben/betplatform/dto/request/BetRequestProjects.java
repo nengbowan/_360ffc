@@ -48,19 +48,25 @@ public class BetRequestProjects {
 
         double total = 0;
         List<Double> defaultPrize = null;
+        int mode = 0;
         if("元".equals(betMoneyUnit)){
             total = betMultiple;
             defaultPrize =  Arrays.asList(new Double[]{ betMultiple * 9.9d});
+            mode = 5;
         }else if("角".equals(betMoneyUnit)){
             total = betMultiple / 10d ;
             defaultPrize =  Arrays.asList(new Double[]{ betMultiple * 0.99d});
+            mode = 6;
         }else if("分".equals(betMoneyUnit)){
             total = betMultiple / 100d ;
             defaultPrize =  Arrays.asList(new Double[]{ betMultiple * 0.099d});
+            mode = 7;
         }else if("厘".equals(betMoneyUnit)){
             total = betMultiple / 1000d ;
             defaultPrize =  Arrays.asList(new Double[]{ betMultiple * 0.0099d});
+            mode = 8;
         }
+
 
 
 
