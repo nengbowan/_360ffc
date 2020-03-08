@@ -30,22 +30,12 @@ public class BetRequestDto {
      * @param betMultiple　　　下注倍数　
      * @return
      */
-    public static BetRequestDto generate(String issue , String betMoneyUnit , String betWhere,int betMultiple){
+    public static BetRequestDto generate(String game, String issue , String betMoneyUnit , String betWhere,int betMultiple){
 
-        double total = 0;
-        if("元".equals(betMoneyUnit)){
-            total = betMultiple;
-        }else if("角".equals(betMoneyUnit)){
-            total = betMultiple / 10d ;
-        }else if("分".equals(betMoneyUnit)){
-            total = betMultiple / 100d ;
-        }else if("厘".equals(betMoneyUnit)){
-            total = betMultiple / 1000d ;
-        }
-        BetRequestProjects projects = BetRequestProjects.generate(betMoneyUnit , betWhere  , betMultiple);
+        BetRequestProjects projects = BetRequestProjects.generate(game , betMoneyUnit , betWhere  , betMultiple);
         BetRequestDto result = BetRequestDto.builder()
                 .client_type("WEB")
-                .lottery_ident("cxg360ffc")
+                .lottery_ident(game)
                 .current_issue(issue)
                 .total(Double.valueOf(projects.getTotal()))
                 .projects(Arrays.asList(projects))

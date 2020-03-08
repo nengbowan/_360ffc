@@ -85,17 +85,18 @@ public class Api {
 
     /**
      * 下注
+     * @game cxg360ffc qiqutxffssc
      * @return
      */
-    public void bet(String issue , String betMoneyUnit , String betWhere,int betMultiple)throws BetFailedException{
-        String url = "/lottery/bet?ident=cxg360ffc";
+    public void bet(String game , String issue , String betMoneyUnit , String betWhere,int betMultiple)throws BetFailedException{
+        String url = "/lottery/bet?ident="+game;
         String requestUrl = baseURL + url;
         HttpPost post = new HttpPost(requestUrl);
         // parameter SerializerFeature.WriteMapNullValue for null value , but property must be exist
         // property position must be exist
         String requestEntity =
                 JSON.toJSONString(
-                    BetRequestDto.generate(issue , betMoneyUnit , betWhere , betMultiple) , SerializerFeature.WriteMapNullValue
+                    BetRequestDto.generate(game , issue , betMoneyUnit , betWhere , betMultiple) , SerializerFeature.WriteMapNullValue
                 );
         StringEntity json = new StringEntity(requestEntity, ContentType.APPLICATION_JSON);
         post.setEntity(json);
@@ -215,7 +216,7 @@ public class Api {
      * 主方法
      * @param args
      */
-    public static void main(String[] args) throws UsernameNotConfiguredException, PasswdNotConfiguredException, LoginFailedException {
+    public static void _360ffc(String[] args) throws UsernameNotConfiguredException, PasswdNotConfiguredException, LoginFailedException {
         Api api = new Api();
         api.login();
         logger.info("登陆成功....");
@@ -263,7 +264,7 @@ public class Api {
 
 
                         //下注万位 1234567位　各1厘
-                        api.bet(issue,BetConfig.SINGLE.getBetMoneyUnit(),BetConfig.SINGLE.getBetWhere(),multiple);
+                        api.bet("cxg360ffc",issue,BetConfig.SINGLE.getBetMoneyUnit(),BetConfig.SINGLE.getBetWhere(),multiple);
                         logger.info("下注成功 -  {} - {}位 1,2,3,4,5,6,7 - {}{}" , issue , BetConfig.SINGLE.getBetWhere()  , multiple , BetConfig.SINGLE.getBetMoneyUnit());
                         betSuccess = true;
 
@@ -360,6 +361,8 @@ public class Api {
         }
     }
 
+
+
     /**
      * 睡眠　单位:秒
      * @param second
@@ -372,5 +375,156 @@ public class Api {
         }
     }
 
+
+//    /**
+//     * 主方法
+//     * @param args
+//     */
+//    public static void main(String[] args) throws UsernameNotConfiguredException, PasswdNotConfiguredException, LoginFailedException {
+//        Api api = new Api();
+//        api.login();
+//        logger.info("登陆成功....");
+//
+//        //投注失败　一直投注
+//
+//        int failCount = 0;
+//
+//
+//
+//        //损失掉的钱
+//        int lostMoney = 0;
+//
+//        //利润
+//        float sumMoney = 0;
+//        //输一次　就清零
+//        int newPlanCount = 0;
+//        //只算同一个批次里面的成功个数
+//        int successCount = 0;
+//
+//        int [] betMultipleArr = new int[]{1,3,12,27,57,129};
+//        try {
+//
+//            //永远执行
+//
+//            int firstBet = betMultipleArr[0];
+//
+//
+//            while(true){
+//                try {
+//                    Double balance = api.getBalance();
+//                    logger.info(" ============= 账户余额 {}" , balance);
+//                } catch (GetBalanceException e) {
+//                    e.printStackTrace();
+//                }
+//                boolean betSuccess = false;
+//
+//
+//                String betIssue = null;
+//                while (!betSuccess){
+//                    //下注
+//                    try {
+//
+//                        IssueData issueAvailable = api.getBetIssue();
+//                        String issue = issueAvailable.getCur().getIssue();
+//                        logger.info("获取期号成功　{}" , issue);
+//
+//
+//                        //下注万位 1234567位　各1厘
+//                        api.bet("cxg360ffc",issue,BetConfig.SINGLE.getBetMoneyUnit(),BetConfig.SINGLE.getBetWhere(),firstBet);
+//                        logger.info("下注成功 -  {} - {}位 1,2,3,4,5,6,7 - {}{}" , issue , BetConfig.SINGLE.getBetWhere()  , firstBet , BetConfig.SINGLE.getBetMoneyUnit());
+//                        betSuccess = true;
+//
+//                        betIssue = issue;
+//                    } catch (BetFailedException e) {
+//                        logger.error(e.getMessage());
+//                        try {
+//                            logger.info("三秒后再次投注.");
+//                            Thread.sleep(3000);
+//                        } catch (InterruptedException e1) {
+//                            e1.printStackTrace();
+//                        }
+//                    }
+//                }
+//
+//                try {
+//                    Double balance = api.getBalance();
+//                    logger.info(" ============= 账户余额 {}" , balance);
+//                } catch (GetBalanceException e) {
+//                    e.printStackTrace();
+//                }
+//
+//
+//                //获取下注历史
+//                //先判断时间　未开奖
+//                //0 未开奖 1 中奖了　2　未中奖
+//                //是否已结算
+//                int hasCalculate = 0;
+//                while(hasCalculate == 0){
+//                    BetHistory history = api.getBetHistoryByIssue(betIssue);
+//                    if(history == null){
+//                        api.sleepSeconds(5);
+//                        continue;
+//                    }
+//                    hasCalculate = history.getIs_get_prize();
+//                    //hold on thread sleep
+//                    logger.info("未开奖,睡眠15秒,获取下注历史记录.....");
+//                    api.sleepSeconds(15);
+//
+//                }
+//
+//                //判断输赢
+//                boolean win = hasCalculate == 1 ? true : false;
+//                if(win){
+//                    sumMoney += firstBet * 2.99f ;
+//
+//                    logger.info("恭喜,您上次投注赢啦~");
+//                    if(failCount == 0){
+//                        //第一次赢　继续执行　回到初始金钱数
+//                        multiple = BetConfig.SINGLE.getStartBetMoney();
+//                    }
+//
+//                    successCount = successCount + 1 ;
+//                    if(successCount >= newPlanCount){
+//                        successCount = 0;
+//                    }
+//                    if(successCount == 0){
+//                        multiple = BetConfig.SINGLE.getStartBetMoney();
+//                        failCount = 0;
+//                        lostMoney = 0;
+//                    }
+//                }else{
+//
+//                    sumMoney -= multiple * 7.0f;
+//                    logger.info("沮丧,您上次投注输啦~");
+//
+//                    //重算下注金额　
+//                    failCount++;
+//                    lostMoney += multiple * 7.0f;
+//
+//
+//                    //仅仅在输的时候才会去重新算
+//                    newPlanCount = failCount + 1 ;
+//                    logger.info("betCountForBalance {}" , newPlanCount);
+//                    //计算每把要赚多少钱
+//                    double perEarn = lostMoney / ( newPlanCount * 1.0d );
+//                    logger.info("perEarn {}" , perEarn);
+//                    //下次打几倍
+//                    multiple = (int)Math.ceil(perEarn / 2.9 );
+//                    logger.info("multiple {}" , multiple);
+//                }
+//
+//                logger.info("损失/盈利金额 {} " , sumMoney  );
+//
+//                logger.info("准备下注  - {}位 1,2,3,4,5,6,7 - {}{}"  , BetConfig.SINGLE.getBetWhere()  , multiple , BetConfig.SINGLE.getBetMoneyUnit());
+//
+//
+//
+//            }
+//
+//
+//        } catch (GetBetIssueException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 }
